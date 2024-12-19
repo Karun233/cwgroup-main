@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Register</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+</head>
+<body>
+    <div class="register-container">
+        <h1 class="text-center">Register Account</h1>
+        <form method="POST" autocomplete="off" class="mt-4">
+            {% csrf_token %}
+            
+            <!-- Loop through form fields -->
+            {% for field in registerform %}
+                <div class="mb-3">
+                    <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+
+                    {% if field.name == "password1" or field.name == "password2" %}
+                        <div class="input-group">
+                            {{ field }}
+                            <button type="button" class="btn btn-outline-secondary toggle-password" data-target="#{{ field.id_for_label }}">
+                                <i class="bi bi-eye-slash" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                    {% else %}
+                        {{ field }}
+                    {% endif %}
+
+                    {% if field.errors %}
+                        <div class="error-message">
+                            {% for error in field.errors %}
+                                <div>{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+            
+            <div class="text-center">
+                <input type="submit" value="Register" class="btn btn-primary w-100">
+            </div>
+        </form>
+        <div class="text-center mt-3">
+            <p>Already have an account?</p>
+            <a href="{% url 'login' %}" class="btn btn-secondary w-100">Sign In</a>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        document.querySelectorAll('.toggle-password').forEach(button => {
+            button.addEventListener('click', function () {
+                const targetId = this.dataset.target;
+                const passwordField = document.querySelector(targetId);
+                const icon = this.querySelector('i');
+
+                if (passwordField.type === "password") {
+                    passwordField.type = "text";
+                    icon.classList.remove('bi-eye-slash');
+                    icon.classList.add('bi-eye');
+                } else {
+                    passwordField.type = "password";
+                    icon.classList.remove('bi-eye');
+                    icon.classList.add('bi-eye-slash');
+                }
+            });
+        });
+    </script>
+
+    <style>
+        body {
+            background-color: #def2f1;
+            color: #17252A;
+        }
+
+        .register-container {
+            background-color: #feffff;
+            padding: 2rem;
+            border-radius: 0.8rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            margin: 2rem auto;
+        }
+
+        .error-message {
+            color: red;
+            font-size: 0.875rem;
+        }
+
+        .btn-primary {
+            background-color: #3aafa9;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background-color: #17252A;
+            color: #feffff;
+        }
+
+        .btn-secondary {
+            background-color: #2b7a78;
+            border: none;
+        }
+
+        .btn-secondary:hover {
+            background-color: #17252A;
+            color: #feffff;
+        }
+
+        h1 {
+            color: #17252A;
+            font-weight: bold;
+        }
+
+        .toggle-password {
+            border: none;
+        }
+
+        .form-control {
+            border-radius: 0.5rem;
+        }
+    </style>
+</body>
+</html>

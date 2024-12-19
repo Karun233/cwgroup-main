@@ -1,25 +1,26 @@
-"""project URL Configuration
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/3.2/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
 from django.conf import settings
 from django.contrib import admin
 from django.urls import include, path
 from django.http import HttpResponse
-
-from .views import main_spa
+from . import views  # Import the entire views module
 
 urlpatterns = [
-    path('', main_spa),
+    path('', views.homepage_view, name='homepage'),
+    path('register', views.register_user, name='register'),
+    path('login', views.login_user, name='login'),
+    path('logout/', views.logout_user, name='logout'),
+
+    # Dashboard / SPA Entry Point
+    path('dashboard', views.main_spa, name='dashboard'),
+
+    # Profile and Account Management
+    path('profile', views.user_profile, name='profile'),
+    path('change_password', views.change_password, name='change_password'),
+
+    # Hobbies Endpoints
+    path('user_hobbies', views.retrieve_user_hobbies, name='user_hobbies'),
+    path('all_hobbies', views.list_all_hobbies, name='all_hobbies'),
+    path('hobbies/create', views.create_new_hobby, name='create_hobby'),
+    path('hobbies/add', views.add_user_hobby, name='add_hobby'),
+    path('hobbies/delete/<int:hobby_id>', views.remove_user_hobby, name='delete_hobby'),
 ]
