@@ -14,31 +14,17 @@ class CreateUserForm(UserCreationForm):
             'date_of_birth': forms.DateInput(
                 format="%Y-%m-%d",
                 attrs={
-                    "type": "date",
-                    "class": "form-control",
-                    "placeholder": "YYYY-MM-DD"
+                    "type": "date", 
+                    "class": "form-control"
                 }
             ),
-            'username': TextInput(attrs={"class": "form-control", "placeholder": "Enter your username"}),
-            'name': TextInput(attrs={"class": "form-control", "placeholder": "Enter your name"}),
-            'email': TextInput(attrs={"class": "form-control", "placeholder": "Enter your email"}),
         }
         input_formats: dict[str, list[str]] = {
             'date_of_birth': ["%Y-%m-%d"],
         }
 
-    def clean_email(self):
-        email = self.cleaned_data.get('email')
-        if CustomUser.objects.filter(email=email).exists():
-            raise forms.ValidationError("A user with this email already exists.")
-        return email
-
 
 # Authenticate a user
 class LoginForm(AuthenticationForm):
-    username = forms.CharField(
-        widget=TextInput(attrs={"class": "form-control", "placeholder": "Enter your username"})
-    )
-    password = forms.CharField(
-        widget=PasswordInput(attrs={"class": "form-control", "placeholder": "Enter your password"})
-    )
+    username = forms.CharField(widget=TextInput())
+    password = forms.CharField(widget=PasswordInput())
