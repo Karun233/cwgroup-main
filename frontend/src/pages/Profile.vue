@@ -55,12 +55,14 @@
       </form>
 
       <div class="mt-4 d-flex justify-content-center gap-3">
-        <!-- Change Password Button (Triggers Modal)-->
+        <!-- Change Password Button (Triggers Modal) -->
         <button @click="showPasswordModal = true" class="btn btn-outline-danger fw-bold">Change Password</button>
-
-        <!-- Update Hobbies Button -->
-        <router-link to="/hobbies" class="btn btn-outline-primary fw-bold">Update Hobbies</router-link>
       </div>
+    </div>
+
+    <!-- Hobbies Section -->
+    <div class="mt-5">
+      <user-hobbies />
     </div>
 
     <!-- Password Update Modal -->
@@ -75,6 +77,7 @@
 <script lang="ts">
 import { defineComponent, reactive, ref } from 'vue';
 import UpdatePassword from './UpdatePassword.vue';
+import UserHobbies from './UserHobbies.vue';
 
 function getCsrfToken(): string {
   const match = document.cookie.match(/csrftoken=([^;]+)/);
@@ -92,7 +95,8 @@ export default defineComponent({
   name: 'Profile',
 
   components: {
-    UpdatePassword
+    UpdatePassword,
+    UserHobbies,
   },
 
   setup() {
@@ -100,7 +104,7 @@ export default defineComponent({
       username: '',
       name: '',
       email: '',
-      date_of_birth: ''
+      date_of_birth: '',
     });
 
     const showPasswordModal = ref<boolean>(false);
@@ -156,7 +160,7 @@ export default defineComponent({
       showPasswordModal,
       closePasswordModal,
     };
-  }
+  },
 });
 </script>
 

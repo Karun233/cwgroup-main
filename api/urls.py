@@ -25,8 +25,8 @@ urlpatterns = [
     path('login/', views.login, name="login"),
     path('register/', views.register, name="register"),
     path('logout/', views.logout_view, name='logout'),
-
     path('dashboard', login_required(views.main_spa), name="dashboard"),
+
     path('api/profile/', login_required(views.profile), name='profile'),
     path('api/profile', login_required(views.profile), name='profile'),
     path('api/update-password', login_required(views.update_password), name='update_password'),

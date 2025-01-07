@@ -163,7 +163,9 @@ export default defineComponent({
         if (!response.ok) {
           errorMessage.value = data.error || 'An error occurred.';
         } else {
+          
           alert('Password changed successfully!');
+          
         }
       } catch (error) {
         errorMessage.value = 'An error occurred. Please try again.';
