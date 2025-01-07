@@ -1,9 +1,9 @@
 <template>
     <div class="hobbies-list container bg-def2f1 p-4 rounded">
-      <h1 class="text-center text-3aafa9 mb-4">Manage Hobbies</h1>
+      <h1 class="text-center text-3aafa9 mb-4">Update Hobbies</h1>
   
       <!-- Section for selecting or adding a hobby -->
-      <h2 class="text-17252A mb-3">Add New Hobby</h2>
+      <h2 class="text-17252A mb-3">Add Hobbies</h2>
       <div class="mb-3">
         <label for="allHobbies" class="form-label text-17252A"></label>
         <select
@@ -15,7 +15,7 @@
           <option v-for="hobby in allHobbies" :key="hobby.id" :value="hobby.id">
             {{ hobby.name }}
           </option>
-          <option value="other">Other</option>
+          <option value="other">+Add A New Hobby</option>
         </select>
 
         <div v-if="Message" class="alert alert-success mt-3" role="alert">
@@ -37,11 +37,11 @@
         class="btn btn-3aafa9 text-feffff w-100 mb-4"
         :disabled="!selectedHobbyId || (selectedHobbyId === 'other' && !newHobbyName)"
       >
-        Add Hobby
+        
       </button>
   
       <!-- Section for displaying user's hobbies -->
-      <h2 class="text-17252A mb-3">Current Hobbies</h2>
+      <h2 class="text-17252A mb-3">Added Hobbies</h2>
       <ul v-if="hobbies.length > 0" class="list-group">
         <li
           v-for="hobby in hobbies"
@@ -58,7 +58,7 @@
         </li>
       </ul>
       <p v-else class="text-center text-2b7a78">
-        No hobbies found. Add some hobbies to see them here.
+        No Hobbies Added
       </p>
     </div>
 </template>
@@ -236,86 +236,125 @@
 </script>
   
 <style scoped>
+  /* Define color variables for reuse and easy theme adjustments */
+  :root {
+    --color-bg: #def2f1;
+    --color-text-primary: #17252a;
+    --color-text-secondary: #2b7a78;
+    --color-text-light: #feffff;
+    --color-button-bg: #3aafa9;
+    --color-button-hover: #2b7a78;
+    --color-border: #2b7a78;
+    --color-accent: #3aafa9;
+  }
+
+  .hobbies-list {
+    background-color: var(--color-bg);
+    color: var(--color-text-primary);
+    min-height: 600px;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Typography classes using consistent values */
+  .text-17252A {
+    color: var(--color-text-primary);
+    font-weight: 600;
+  }
+
+  .text-feffff {
+    color: var(--color-text-light);
+  }
+
+  .text-2b7a78 {
+    color: var(--color-text-secondary);
+  }
+
+  .bg-def2f1 {
+    background-color: var(--color-bg);
+  }
+
+  .btn-3aafa9 {
+    background-color: var(--color-button-bg);
+    border: 1px solid var(--color-button-bg);
+    color: var(--color-text-light);
+    transition: background-color 0.3s, border-color 0.3s;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  .btn-3aafa9:hover {
+    background-color: var(--color-button-hover);
+    border-color: var(--color-button-hover);
+  }
+
+  .border-2b7a78 {
+    border-color: var(--color-border);
+  }
+
+  .alert {
+    font-size: 0.9rem;
+    padding: 10px;
+    border-radius: 4px;
+    background-color: #f8d7da; /* subtle error background */
+    color: #721c24; /* error text color */
+    margin-top: 10px;
+  }
+
+  .list-group-item {
+    border: 1px solid var(--color-border);
+    border-radius: 0;
+    background-color: var(--color-bg);
+    color: var(--color-text-primary);
+    padding: 10px 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: transform 0.2s, box-shadow 0.2s;
+    margin-bottom: 0.5rem;
+  }
+
+  .list-group-item:first-of-type {
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+  }
+
+  .list-group-item:last-of-type {
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+  }
+
+  .list-group-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  }
+
+  h2 {
+    font-size: 1.5rem;
+    color: var(--color-text-primary);
+    border-bottom: 2px solid var(--color-accent);
+    padding-bottom: 5px;
+    margin-bottom: 1rem;
+  }
+
+  /* Responsive adjustments for smaller screens */
+  @media (max-width: 600px) {
     .hobbies-list {
-      background-color: #def2f1;
-      color: #17252a;
-      min-height: 600px;
-      border-radius: 8px;
-      padding: 20px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      padding: 15px;
     }
-  
-    .text-17252A {
-      color: #17252a;
-      font-weight: 600;
-    }
-  
-    .text-feffff {
-      color: #feffff;
-    }
-  
-    .text-2b7a78 {
-      color: #2b7a78;
-    }
-  
-    .bg-def2f1 {
-      background-color: #def2f1;
-    }
-  
+
     .btn-3aafa9 {
-      background-color: #3aafa9;
-      border-color: #3aafa9;
-      color: #feffff;
-      transition: background-color 0.3s, border-color 0.3s;
+      width: 100%;
+      padding: 0.75rem;
     }
-  
-    .btn-3aafa9:hover {
-      background-color: #2b7a78;
-      border-color: #2b7a78;
-    }
-  
-    .border-2b7a78 {
-      border-color: #2b7a78;
-    }
-  
-    .alert {
-      font-size: 0.9rem;
-      padding: 10px;
-      border-radius: 4px;
-    }
-  
+
     .list-group-item {
-      border: 1px solid #2b7a78;
-      border-radius: 0;
-      background-color: #def2f1;
-      color: #17252a;
-      padding: 10px 15px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      transition: transform 0.2s;
+      flex-direction: column;
+      align-items: flex-start;
     }
-  
-    .list-group-item:first-of-type {
-      border-top-left-radius: 8px;
-      border-top-right-radius: 8px;
-    }
-  
-    .list-group-item:last-of-type {
-      border-bottom-left-radius: 8px;
-      border-bottom-right-radius: 8px;
-    }
-  
-    .list-group-item:hover {
-      transform: translateY(-2px);
-    }
-  
-    h2 {
-      font-size: 1.5rem;
-      color: #17252a;
-      border-bottom: 2px solid #3aafa9;
-      padding-bottom: 5px;
-      margin-bottom: 1rem;
-    }
+  }
 </style>
+
   

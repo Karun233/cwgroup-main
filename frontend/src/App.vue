@@ -1,11 +1,11 @@
 <template>
   <main class="container py-5">
       <div class="d-flex justify-content-between align-items-center bg-main text-light p-4 rounded-lg shadow-lg mb-4">
-        <router-link to="/dashboard" class="h2 m-0 text-decoration-none text-light">Website Name/Logo</router-link>
+        <router-link to="/dashboard" class="h2 m-0 text-decoration-none text-light">Dashboard</router-link>
         <nav>
           <ul class="nav">
             <li class="nav-item">
-              <router-link to="/profile" class="nav-link text-light">Go to Profile</router-link>
+              <router-link to="/profile" class="nav-link text-light">Profile</router-link>
             </li>
             <li class="nav-item">
               <router-link to="/hobbies" class="nav-link text-light">Hobbies</router-link>
@@ -33,7 +33,8 @@ export default defineComponent({
 
 <style scoped>
 .bg-main {
-  background-color: #2b7a78; 
+  background-color: #0b9ebb;
+
 }
 
 .nav-link {

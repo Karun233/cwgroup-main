@@ -1,5 +1,5 @@
 <template>
-  <div class="container mt-5" style="background-color: #def2f1; border-radius: 8px; padding: 30px;">
+  <div class="container mt-5" style="background-color: white; border-radius: 8px; padding: 30px;">
     <h1 class="mb-4" style="color: #17252A;">Change Password</h1>
     <form @submit.prevent="submitForm" class="needs-validation" novalidate>
 
@@ -18,7 +18,7 @@
             type="button"
             class="btn btn-outline-secondary"
             @click="toggleShowCurrentPassword"
-            style="background-color: #2b7a78; color: #feffff; border: none;"
+            style="background-color: #0dcaf0; color: #feffff; border: none;"
           >
             <i class="bi" :class="showCurrentPassword ? 'bi-eye' : 'bi-eye-slash'"></i>
           </button>
@@ -42,7 +42,7 @@
             type="button"
             class="btn btn-outline-secondary"
             @click="toggleShowNewPassword"
-            style="background-color: #2b7a78; color: #feffff; border: none;"
+            style="background-color: #0dcaf0; color: #feffff; border: none;"
           >
             <i class="bi" :class="showCurrentPassword ? 'bi-eye' : 'bi-eye-slash'"></i>
           </button>
@@ -77,7 +77,7 @@
             type="button"
             class="btn btn-outline-secondary"
             @click="toggleShowConfirmPassword"
-            style="background-color: #2b7a78; color: #feffff; border: none;"
+            style="background-color: #0dcaf0; color: #feffff; border: none;"
           >
             <i class="bi" :class="showCurrentPassword ? 'bi-eye' : 'bi-eye-slash'"></i>
           </button>
@@ -89,7 +89,7 @@
       </div>
 
       <div class="text-center">
-        <button type="submit" class="btn" style="background-color: #2b7a78; color: #feffff; border: none;">Change Password</button>
+        <button type="submit" class="btn" style="background-color: #0dcaf0; color: #feffff; border: none;">Change Password</button>
         <button type="button" class="btn btn-outline-danger" @click="closeModal">Cancel</button>
       </div>
       

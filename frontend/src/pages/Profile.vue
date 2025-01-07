@@ -11,7 +11,7 @@
             type="text" 
             class="form-control" 
             v-model="profile.username" 
-            :disabled="true"
+            :disabled="false"
           />
         </div>
 
@@ -77,7 +77,7 @@
 <script lang="ts">
 import { defineComponent, reactive, ref } from 'vue';
 import UpdatePassword from './UpdatePassword.vue';
-import UserHobbies from './UserHobbies.vue';
+import UserHobbies from './UpdateHobbies.vue';
 
 function getCsrfToken(): string {
   const match = document.cookie.match(/csrftoken=([^;]+)/);
@@ -165,69 +165,78 @@ export default defineComponent({
 </script>
 
 <style scoped>
-input {
-  background-color: #def2f1;
-  min-height: 50px;
-}
+  /* Define color variables */
+  :root {
+    --bg-color-light: #def2f1;
+    --color-main: #2b7a78;
+    --color-info: #3aafa9;
+    --color-danger: #dc3545;
+    --white: #fff;
+  }
 
-label {
-  font-size: large;
-}
+  /* Input and Label Styling */
+  input {
+    background-color: var(--bg-color-light);
+    min-height: 50px;
+  }
 
-.bg-main {
-  background-color: #2b7a78 !important;
-}
+  label {
+    font-size: large;
+  }
 
-.text-main {
-  color: #2b7a78 !important;
-}
+  /* Background and Text Colors */
+  .bg-main {
+    background-color: var(--color-main) !important;
+  }
 
-.btn-info {
-  background-color: #3aafa9;
-  border-color: #3aafa9;
-}
+  .text-main {
+    color: var(--color-main) !important;
+  }
 
-.btn-info:hover {
-  background-color: #2b7a78;
-  border-color: #2b7a78;
-}
+  /* Button Styles */
+  
 
-.btn-outline-danger {
-  color: #dc3545;
-  border-color: #dc3545;
-}
+  .btn-outline-danger {
+    color: var(--color-danger);
+    border-color: var(--color-danger);
+    transition: background-color 0.3s, color 0.3s;
+  }
 
-.btn-outline-danger:hover {
-  background-color: #dc3545;
-  color: #fff;
-}
+  .btn-outline-danger:hover {
+    background-color: var(--color-danger);
+    color: var(--white);
+  }
 
-.rounded-lg {
-  border-radius: 0.5rem;
-}
+  /* Utility Classes */
+  .rounded-lg {
+    border-radius: 0.5rem;
+  }
 
-.shadow-lg {
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
+  .shadow-lg {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
 
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 999;
-}
+  /* Modal Overlay and Content */
+  .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+  }
 
-.modal-content {
-  background-color: #fff;
-  padding: 20px;
-  border-radius: 8px;
-  max-width: 500px;
-  width: 100%;
-}
+  .modal-content {
+    background-color: var(--white);
+    padding: 20px;
+    border-radius: 8px;
+    max-width: 500px;
+    width: 100%;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
 </style>
+
