@@ -36,4 +36,10 @@ urlpatterns = [
     path('api/hobbies/add/', login_required(views.add_hobby), name="add_hobby"),
     path('api/hobbies/create/', login_required(views.create_hobby), name="create_hobby"),
     path('api/all-hobbies/', login_required(views.all_hobbies), name="all_hobbies"),
+
+    path("api/friend-request/send/", views.send_friend_request, name="send_friend_request"),
+    path("api/friend-request/manage/<int:request_id>/", views.manage_friend_request, name="manage_friend_request"),
+    path("api/friend-requests/", views.get_friend_requests, name="get_friend_requests"),
+    path("api/friends/", views.get_friends, name="get_friends"),
+    path("api/users", views.get_users, name="get_users"),
 ]
