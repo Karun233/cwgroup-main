@@ -6,11 +6,11 @@
         <!-- Username Field -->
         <div class="mb-4">
           <label for="username" class="form-label fw-bold text-main">Username:</label>
-          <input 
-            id="username" 
-            type="text" 
-            class="form-control" 
-            v-model="profile.username" 
+          <input
+            id="username"
+            type="text"
+            class="form-control"
+            v-model="profile.username"
             :disabled="false"
           />
         </div>
@@ -18,33 +18,33 @@
         <!-- Name Field -->
         <div class="mb-4">
           <label for="name" class="form-label fw-bold text-main">Name:</label>
-          <input 
-            id="name" 
-            type="text" 
-            class="form-control" 
-            v-model="profile.name" 
+          <input
+            id="name"
+            type="text"
+            class="form-control"
+            v-model="profile.name"
           />
         </div>
 
         <!-- Email Field -->
         <div class="mb-4">
           <label for="email" class="form-label fw-bold text-main">Email:</label>
-          <input 
-            id="email" 
-            type="email" 
-            class="form-control" 
-            v-model="profile.email" 
+          <input
+            id="email"
+            type="email"
+            class="form-control"
+            v-model="profile.email"
           />
         </div>
 
         <!-- Date of Birth Field -->
         <div class="mb-4">
           <label for="date_of_birth" class="form-label fw-bold text-main">Date of Birth:</label>
-          <input 
-            id="date_of_birth" 
-            type="date" 
-            class="form-control" 
-            v-model="profile.date_of_birth" 
+          <input
+            id="date_of_birth"
+            type="date"
+            class="form-control"
+            v-model="profile.date_of_birth"
           />
         </div>
 
@@ -56,7 +56,9 @@
 
       <div class="mt-4 d-flex justify-content-center gap-3">
         <!-- Change Password Button (Triggers Modal) -->
-        <button @click="showPasswordModal = true" class="btn btn-outline-danger fw-bold">Change Password</button>
+        <button @click="showPasswordModal = true" class="btn btn-outline-danger fw-bold">
+          Change Password
+        </button>
       </div>
     </div>
 
@@ -68,94 +70,52 @@
     <!-- Password Update Modal -->
     <div v-if="showPasswordModal" class="modal-overlay" @click="closePasswordModal">
       <div class="modal-content" @click.stop>
-        <update-password @close="closePasswordModal"/>
+        <update-password @close="closePasswordModal" />
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, ref } from 'vue';
+import { defineComponent, onMounted, ref } from 'vue';
+import { storeToRefs } from 'pinia';            // <-- Import storeToRefs
 import UpdatePassword from './UpdatePassword.vue';
 import UserHobbies from './UpdateHobbies.vue';
-
-function getCsrfToken(): string {
-  const match = document.cookie.match(/csrftoken=([^;]+)/);
-  return match ? match[1] : '';
-}
-
-interface Profile {
-  username: string;
-  name: string;
-  email: string;
-  date_of_birth: string;
-}
+import { useUserStore } from '../stores/useUserStore';
 
 export default defineComponent({
   name: 'Profile',
-
   components: {
     UpdatePassword,
     UserHobbies,
   },
-
   setup() {
-    const profile = reactive<Profile>({
-      username: '',
-      name: '',
-      email: '',
-      date_of_birth: '',
-    });
+    const userStore = useUserStore();
+    // De-structure reactive refs using storeToRefs
+    // This ensures `profile` remains fully reactive 
+    // when userStore.profile changes.
+    const { profile } = storeToRefs(userStore);
 
-    const showPasswordModal = ref<boolean>(false);
-
-    const closePasswordModal = (): void => {
+    const showPasswordModal = ref(false);
+    const closePasswordModal = () => {
       showPasswordModal.value = false;
     };
 
-    const fetchProfile = async (): Promise<void> => {
-      try {
-        const response = await fetch('/api/profile', {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
-        if (response.ok) {
-          const data: Profile = await response.json();
-          Object.assign(profile, data);
-        } else {
-          console.error('Failed to fetch profile data');
-        }
-      } catch (error) {
-        console.error('Error fetching profile:', error);
-      }
-    };
+    // Load the current profile from the store
+    onMounted(() => {
+      userStore.fetchProfile();
+    });
 
-    const updateProfile = async (): Promise<void>  => {
-      try {
-        const response = await fetch('/api/profile', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'X-CSRFToken': getCsrfToken(),
-          },
-          body: JSON.stringify(profile),
-        });
-        if (!response.ok) {
-          console.error('Failed to update profile');
-        } else {
-          alert('Profile updated successfully');
-        }
-      } catch (error) {
-        console.error('Error updating profile:', error);
-      }
+    // Invokes the store action to update the profile
+    const updateProfile = async () => {
+      await userStore.updateProfile();
+      // userStore.updateProfile() re-fetches the profile,
+      // so `profile` in the store should be updated automatically
+      // thanks to storeToRefs.
     };
-
-    fetchProfile();
 
     return {
-      profile,
+      profile,            // now a ref, so template usage is fully reactive
       updateProfile,
       showPasswordModal,
       closePasswordModal,
@@ -163,80 +123,3 @@ export default defineComponent({
   },
 });
 </script>
-
-<style scoped>
-  /* Define color variables */
-  :root {
-    --bg-color-light: #def2f1;
-    --color-main: #2b7a78;
-    --color-info: #3aafa9;
-    --color-danger: #dc3545;
-    --white: #fff;
-  }
-
-  /* Input and Label Styling */
-  input {
-    background-color: var(--bg-color-light);
-    min-height: 50px;
-  }
-
-  label {
-    font-size: large;
-  }
-
-  /* Background and Text Colors */
-  .bg-main {
-    background-color: var(--color-main) !important;
-  }
-
-  .text-main {
-    color: var(--color-main) !important;
-  }
-
-  /* Button Styles */
-  
-
-  .btn-outline-danger {
-    color: var(--color-danger);
-    border-color: var(--color-danger);
-    transition: background-color 0.3s, color 0.3s;
-  }
-
-  .btn-outline-danger:hover {
-    background-color: var(--color-danger);
-    color: var(--white);
-  }
-
-  /* Utility Classes */
-  .rounded-lg {
-    border-radius: 0.5rem;
-  }
-
-  .shadow-lg {
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  }
-
-  /* Modal Overlay and Content */
-  .modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 999;
-  }
-
-  .modal-content {
-    background-color: var(--white);
-    padding: 20px;
-    border-radius: 8px;
-    max-width: 500px;
-    width: 100%;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  }
-</style>
-
