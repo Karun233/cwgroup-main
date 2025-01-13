@@ -42,4 +42,7 @@ urlpatterns = [
     path("api/friend-requests/", views.get_friend_requests, name="get_friend_requests"),
     path("api/friends/", views.get_friends, name="get_friends"),
     path("api/users", views.get_users, name="get_users"),
+  
+    path('api/similar-hobbies/', login_required(views.similar_hobbies), name='similar_hobbies')
 ]
+ 

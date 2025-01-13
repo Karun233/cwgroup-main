@@ -10,6 +10,10 @@ from django.core.exceptions import ValidationError
 import json
 from datetime import datetime
 from django.views.decorators.http import require_GET, require_POST
+from typing import Any
+from django.core.paginator import Paginator
+from django.db.models import Count, Q
+
 
 def main_spa(request: HttpRequest) -> HttpResponse:
     return render(request, 'api/spa/index.html', {})
@@ -300,3 +304,72 @@ def get_users(request):
     users_data = list(users.values("id", "username", "name", "email"))
 
     return JsonResponse(users_data, safe=False)
+
+
+@login_required
+def similar_hobbies(request):
+    # Get the current user's hobby IDs
+    user_hobbies = request.user.hobbies.values_list('id', flat=True)
+
+    # Get query parameters for age filters
+    min_age_str = request.GET.get('age_min', '')
+    max_age_str = request.GET.get('age_max', '')
+
+    # Convert them to integers if possible
+    min_age = int(min_age_str) if min_age_str.isdigit() else None
+    max_age = int(max_age_str) if max_age_str.isdigit() else None
+
+    # Build a base queryset
+    users = (
+        CustomUser.objects
+        .exclude(id=request.user.id)  # Exclude current user
+        .annotate(
+            common_hobbies=Count('hobbies', filter=Q(hobbies__id__in=user_hobbies))
+        )
+    )
+
+    # Build date filters (for age)
+    # For demonstration, we use the year 2025 - age as a rough DOB cutoff.
+    date_filters = {}
+    if min_age is not None:
+        # People must be at least `min_age` ⇒ Born on or before (2025 - min_age).
+        date_filters['date_of_birth__lte'] = f'{2025 - min_age}-01-01'
+    if max_age is not None:
+        # People must be at most `max_age` ⇒ Born on or after (2025 - max_age).
+        date_filters['date_of_birth__gte'] = f'{2025 - max_age}-01-01'
+
+    if date_filters:
+        users = users.filter(**date_filters)
+
+    # Order by number of common hobbies desc, then by name asc
+    users = users.order_by('-common_hobbies', 'name')
+
+    # Handle pagination
+    page_num = request.GET.get('page', 1)
+    paginator = Paginator(users, 10)
+    page_obj = paginator.get_page(page_num)
+
+    # Build user data array
+    user_data = []
+    for u in page_obj:
+        dob_year = u.date_of_birth.year if u.date_of_birth else None
+        age = 2025 - dob_year if dob_year else None
+
+        user_data.append({
+            'id': u.id,
+            'name': u.name,
+            'common_hobbies': u.common_hobbies,
+            'age': age,
+        })
+
+    # Debug prints in your server logs
+    print(f"Request Parameters: min_age={min_age}, max_age={max_age}, page={page_num}")
+    print(f"Total Users in Queryset (after filters): {users.count()}")
+    print(f"Users on this Page: {[user.id for user in page_obj]}")
+    print("User Data in Response:", user_data)
+
+    return JsonResponse({
+        'users': user_data,
+        'page': page_obj.number,
+        'pages': paginator.num_pages,
+    })

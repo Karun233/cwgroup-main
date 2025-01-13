@@ -7,7 +7,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Dashboard from '../pages/Dashboard.vue';
 import Profile from '../pages/Profile.vue';
 import UpdatePassword from '../pages/UpdatePassword.vue';
-
+import CommonHobbies from '../pages/CommonHobbies.vue';
 import UpdateHobbies from '../pages/UpdateHobbies.vue';
 
 let base = (import.meta.env.MODE == 'development') ? import.meta.env.BASE_URL : ''
@@ -21,7 +21,8 @@ const router = createRouter({
         { path: '/dashboard', name: 'Dashboard', component: Dashboard },
         { path: '/profile/', name: 'profile', component: Profile },
         { path: '/updatepassword/', name: 'Update Password', component: UpdatePassword },
-        {path: '/profile/', name: 'Hobbies', component: UpdateHobbies}
+        {path: '/profile/', name: 'Hobbies', component: UpdateHobbies},
+        {path: '/hobbies/', name: 'CommonHobbies', component: CommonHobbies}
        // {path: '/hobbies/', name: 'CommonHobbies' }   Add the component for the hobbies page here JOSEPH and import it at the top
     ],
 });
