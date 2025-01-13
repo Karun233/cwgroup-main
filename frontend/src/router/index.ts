@@ -9,6 +9,7 @@ import Profile from '../pages/Profile.vue';
 import UpdatePassword from '../pages/UpdatePassword.vue';
 
 import UpdateHobbies from '../pages/UpdateHobbies.vue';
+import CommonHobbies from '../pages/CommonHobbies.vue';
 
 let base = (import.meta.env.MODE == 'development') ? import.meta.env.BASE_URL : ''
 
@@ -21,8 +22,8 @@ const router = createRouter({
         { path: '/dashboard', name: 'Dashboard', component: Dashboard },
         { path: '/profile/', name: 'profile', component: Profile },
         { path: '/updatepassword/', name: 'Update Password', component: UpdatePassword },
-        {path: '/profile/', name: 'Hobbies', component: UpdateHobbies}
-       // {path: '/hobbies/', name: 'CommonHobbies' }   Add the component for the hobbies page here JOSEPH and import it at the top
+        { path: '/profile/', name: 'Hobbies', component: UpdateHobbies},
+        { path: '/CommonHobbies/', name: 'CommonHobbies', component: CommonHobbies}   //Add the component for the hobbies page here JOSEPH and import it at the top
     ],
 });
 

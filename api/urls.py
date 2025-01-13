@@ -31,9 +31,11 @@ urlpatterns = [
     path('api/profile', login_required(views.profile), name='profile'),
     path('api/update-password', login_required(views.update_password), name='update_password'),
     
-    path('api/hobbies/', login_required(views.user_hobbies), name="userhobbies"),
+    path('api/hobbies/', login_required(views.user_hobbies), name="user_hobbies"),
     path('api/hobbies/<int:hobby_id>/', login_required(views.delete_hobby), name="delete_hobby"),
     path('api/hobbies/add/', login_required(views.add_hobby), name="add_hobby"),
     path('api/hobbies/create/', login_required(views.create_hobby), name="create_hobby"),
     path('api/all-hobbies/', login_required(views.all_hobbies), name="all_hobbies"),
+
+    path('api/similar_hobbies/', login_required(views.similar_hobbies), name='similar_hobbies')
 ]

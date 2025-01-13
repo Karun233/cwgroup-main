@@ -3,12 +3,15 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import auth
 from django.contrib.auth import authenticate, update_session_auth_hash, logout
+from django.db.models import Count, Q
+from django.core.paginator import Paginator
 from .forms import CreateUserForm, LoginForm
-from .models import Hobby
+from .models import Hobby, CustomUser
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 import json
 from datetime import datetime
+from typing import Any
 
 
 def main_spa(request: HttpRequest) -> HttpResponse:
@@ -161,3 +164,38 @@ def add_hobby(request: HttpRequest) -> JsonResponse:
             return JsonResponse({"message": "Hobby added successfully"}, status=200)
         return JsonResponse({"error": "Hobby ID is required"}, status=400)
     return JsonResponse({"error": "Invalid method"}, status=405)
+
+@login_required
+def similar_hobbies(request):
+    user_hobbies = request.user.hobbies.values_list('id', flat=True)
+
+    max_age = int(request.GET.get('max_age', 100))
+    min_age = int(request.GET.get('min_age', 0))
+
+    users = (
+        CustomUser.objects.exclude(id=request.user.id)
+        .annotate(common_hobbies=Count('hobbies', filter=Q(hobbies__id__in=user_hobbies)))
+        .filter(date_of_birth__lte=f'{2025 - min_age}-01-01', date_of_birth__gte=f'{2025-max_age}-01-01')
+        .order_by('-common_hobbies', 'name')
+
+    )
+        
+    paginator = Paginator(users, 10)
+    page_num = request.GET.get('page',1)
+    page_obj = paginator.get_page(page_num)
+
+    user_data = [
+        {
+            'id': user.id,
+            'name': user.name,
+            'common_hobbies': user.common_hobbies,
+            'age': 2025 - user.date_of_birth.year,
+        }
+        for user in page_obj
+    ]
+
+    return JsonResponse({
+        'users': user_data,
+        'page': page_obj.number,
+        'pages': paginator.num_pages
+    })
