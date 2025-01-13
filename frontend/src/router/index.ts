@@ -23,7 +23,7 @@ const router = createRouter({
         { path: '/profile/', name: 'profile', component: Profile },
         { path: '/updatepassword/', name: 'Update Password', component: UpdatePassword },
         { path: '/profile/', name: 'Hobbies', component: UpdateHobbies},
-        { path: '/CommonHobbies/', name: 'CommonHobbies', component: CommonHobbies}   //Add the component for the hobbies page here JOSEPH and import it at the top
+        { path: '/hobbies/', name: 'CommonHobbies', component: CommonHobbies}   //Add the component for the hobbies page here JOSEPH and import it at the top
     ],
 });
 

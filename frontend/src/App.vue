@@ -11,9 +11,6 @@
               <router-link to="/hobbies" class="nav-link text-light">Hobbies</router-link>
             </li>
             <li class="nav-item">
-              <router-link to="/similar_hobbies" class="nav-link text-light">Similar Hobbies</router-link>
-            </li>
-            <li class="nav-item">
               <a href="/logout" class="nav-link text-light">Logout</a>
             </li>
           </ul>
