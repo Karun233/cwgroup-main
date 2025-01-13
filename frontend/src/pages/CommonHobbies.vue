@@ -33,70 +33,70 @@
   <script lang="ts">
   import { defineComponent, reactive } from "vue";
 
-// Define the interface for a user
-interface User {
-  id: number;
-  name: string;
-  age: number;
-  common_hobbies: number;
-}
+    // Define the interface for a user
+    interface User {
+    id: number;
+    name: string;
+    age: number;
+    common_hobbies: number;
+    }
 
-export default defineComponent({
-  name: "UsersPage",
-  setup() {
-    const state = reactive<{
-      users: User[]; // Explicitly define 'users' as an array of User
-      page: number;
-      totalPages: number;
-      filters: {
-        ageMin: number;
-        ageMax: number;
-      };
-    }>({
-      users: [], // Initialize as an empty array of users
-      page: 1,
-      totalPages: 1,
-      filters: {
-        ageMin: 0,
-        ageMax: 150,
-      },
-    });
-
-    const fetchUsers = async () => {
-      const params = new URLSearchParams({
-        age_min: state.filters.ageMin.toString(),
-        age_max: state.filters.ageMax.toString(),
-        page: state.page.toString(),
-      });
-
-      try {
-        const response = await fetch(`/api/similar-users/?${params}`);
-        const data = await response.json();
-        state.users = data.users;
-        state.page = data.page;
-        state.totalPages = data.pages;
-      } catch (error) {
-        console.error("Failed to fetch users:", error);
-      }
-    };
-
-    const prevPage = () => {
-      if (state.page > 1) {
-        state.page -= 1;
-        fetchUsers();
-      }
-    };
-
-    const nextPage = () => {
-      if (state.page < state.totalPages) {
-        state.page += 1;
-        fetchUsers();
-      }
-    };
-
-    // Fetch users on mount
-    fetchUsers();
-
-    return { ...state, fetchUsers, prevPage, nextPage };
+    export default defineComponent({
+    name: "UsersPage",
+    setup() {
+        const state = reactive<{
+        users: User[];
+        page: number;
+        totalPages: number;
+        filters: {
+            ageMin: number;
+            ageMax: number;
+        };
+        }>({
+        users: [],
+        page: 1,
+        totalPages: 1,
+        filters: {
+            ageMin: 0,
+            ageMax: 150,
         },
-    });
+        });
+
+        const fetchUsers = async () => {
+        const params = new URLSearchParams({
+            age_min: state.filters.ageMin.toString(),
+            age_max: state.filters.ageMax.toString(),
+            page: state.page.toString(),
+        });
+
+        try {
+            const response = await fetch(`/api/similar-users/?${params}`);
+            const data = await response.json();
+            state.users = data.users;
+            state.page = data.page;
+            state.totalPages = data.pages;
+        } catch (error) {
+            console.error("Failed to fetch users:", error);
+        }
+        };
+
+        const prevPage = () => {
+        if (state.page > 1) {
+            state.page -= 1;
+            fetchUsers();
+        }
+        };
+
+        const nextPage = () => {
+        if (state.page < state.totalPages) {
+            state.page += 1;
+            fetchUsers();
+        }
+        };
+
+        fetchUsers();
+
+        return { ...state, fetchUsers, prevPage, nextPage };
+            },
+        });
+    </script>
