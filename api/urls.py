@@ -20,6 +20,7 @@ from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from . import views
 
+
 urlpatterns = [
     path('', views.homepage, name=""),
     path('login/', views.login, name="login"),
@@ -43,6 +44,8 @@ urlpatterns = [
     path("api/friends/", views.get_friends, name="get_friends"),
     path("api/users", views.get_users, name="get_users"),
   
-    path('api/similar-hobbies/', login_required(views.similar_hobbies), name='similar_hobbies')
+    path('api/similar-hobbies/', login_required(views.similar_hobbies), name='similar_hobbies'),
+
+    
 ]
  
