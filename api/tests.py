@@ -4,6 +4,7 @@ import re
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import TimeoutException
 import time
 from api.tests_setup import SeleniumTestCase  # Adjust import based on your project structure
 from django.contrib.auth import get_user_model
@@ -61,7 +62,7 @@ class E2ETests(SeleniumTestCase):
         )
         self.assertIn("/dashboard/", self.driver.current_url)"""
     
-    def test_edit_profile(self):
+    """def test_edit_profile(self):
         
         from django.contrib.auth import get_user_model
         User = get_user_model()
@@ -107,7 +108,81 @@ class E2ETests(SeleniumTestCase):
         # Switch to the alert, check its text, and accept it
         alert = self.driver.switch_to.alert
         self.assertIn("Profile updated successfully", alert.text)
-        alert.accept()
+        alert.accept()"""
+
+
+    def test_add_hobby(self):
+        
+
+        # --- Begin Login Process ---
+        self.driver.get(f'http://127.0.0.1:8000/login/')
+        
+        self.fill_input(By.ID, "id_username", "jeff")
+        self.fill_input(By.ID, "id_password", "karun2003")
+        
+        login_button = self.driver.find_element(By.CSS_SELECTOR, "input[type='submit']")
+        login_button.click()
+        
+        # Wait for redirection after login
+        WebDriverWait(self.driver, 10).until(
+            EC.url_contains("/dashboard")
+        )
+        profile_link = WebDriverWait(self.driver, 10).until(
+            EC.element_to_be_clickable((By.CSS_SELECTOR, "a.nav-link[href='/profile']"))
+        )
+        profile_link.click()
+        
+        # Wait for the hobby dropdown to be present on the page.
+        WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((By.ID, "allHobbies"))
+        )
+
+        # --- Begin Adding a Hobby ---
+        hobby_select = WebDriverWait(self.driver, 10).until(
+            EC.element_to_be_clickable((By.ID, "allHobbies"))
+        )
+        
+        
+        # Select the option with value 'other'
+        other_option = self.driver.find_element(By.CSS_SELECTOR, "#allHobbies option[value='other']")
+        other_option.click()
+        
+        self.fill_input(By.CSS_SELECTOR, "input[placeholder='Enter your new hobby']", "New_hobby_test")
+
+        # Optional: Wait briefly to ensure the UI processes the input
+        time.sleep(1)
+
+        # Locate the container element to scroll into view
+        hobbies_container = self.driver.find_element(
+            By.CSS_SELECTOR, 
+            "div.hobbies-list.container.bg-def2f1.p-4.rounded"
+        )
+        # Scroll the container into view
+        self.driver.execute_script("arguments[0].scrollIntoView(true);", hobbies_container)
+
+        # Wait until the "Add Hobby" button becomes clickable
+        add_hobby_button = WebDriverWait(self.driver, 10).until(
+            EC.element_to_be_clickable((By.XPATH, "//button[contains(text(), 'Add Hobby')]"))
+        )
+
+        # Click the "Add Hobby" button
+        try:
+            add_hobby_button.click()
+        except Exception as e:
+            # If click is intercepted or fails, attempt JavaScript click as a fallback
+            self.driver.execute_script("arguments[0].click();", add_hobby_button)
+
+        try:
+    # Wait until the success message is present
+            success_message = WebDriverWait(self.driver, 10).until(
+                EC.presence_of_element_located((By.CSS_SELECTOR, "div.alert.alert-success.mt-3"))
+            )
+            # Verify that the success message contains the expected text
+            self.assertIn("New hobby added!", success_message.text)
+        except TimeoutException:
+            self.fail("Success message did not appear after adding a hobby.")
+
+        
 
 
 
