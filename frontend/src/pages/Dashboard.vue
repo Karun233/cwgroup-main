@@ -4,7 +4,7 @@
 
     <!-- Send Friend Request -->
     <div class="send-friend">
-      <input v-model="searchQuery" placeholder="Search for a user" class="form-control" />
+      <input v-model="searchQuery" placeholder="Search for a user or press search whilst empty to see all Users" class="form-control" />
       <button @click="findUsers" class="btn btn-primary mt-2">Search</button>
       <ul v-if="foundUsers.length > 0" class="list-group mt-2">
         <li

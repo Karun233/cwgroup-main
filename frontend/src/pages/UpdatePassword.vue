@@ -89,7 +89,7 @@
       </div>
 
       <div class="text-center">
-        <button type="submit" class="btn" style="background-color: #0dcaf0; color: #feffff; border: none;">Change Password</button>
+        <button type="submit" class="btn" style="background-color: #0dcaf0; color: #feffff; border: none;">Update Password</button>
         <button type="button" class="btn btn-outline-danger" @click="closeModal">Cancel</button>
       </div>
       

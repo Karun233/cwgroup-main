@@ -4,16 +4,6 @@
     <div class="box p-5 rounded-lg shadow-lg">
       <form @submit.prevent="updateProfile">
         <!-- Username Field -->
-        <div class="mb-4">
-          <label for="username" class="form-label fw-bold text-main">Username:</label>
-          <input
-            id="username"
-            type="text"
-            class="form-control"
-            v-model="profile.username"
-            :disabled="false"
-          />
-        </div>
 
         <!-- Name Field -->
         <div class="mb-4">
@@ -62,17 +52,19 @@
       </div>
     </div>
 
-    <!-- Hobbies Section -->
-    <div class="mt-5">
-      <user-hobbies />
-    </div>
-
     <!-- Password Update Modal -->
     <div v-if="showPasswordModal" class="modal-overlay" @click="closePasswordModal">
       <div class="modal-content" @click.stop>
         <update-password @close="closePasswordModal" />
       </div>
     </div>
+
+    <!-- Hobbies Section -->
+    <div class="mt-5">
+      <user-hobbies />
+    </div>
+
+    
   </div>
 </template>
 

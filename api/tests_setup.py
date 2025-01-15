@@ -1,3 +1,5 @@
+import subprocess
+import time
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium.webdriver.chrome.service import Service
 from selenium import webdriver
@@ -16,6 +18,15 @@ class SeleniumTestCase(StaticLiveServerTestCase):
         Set up the webdriver
         """
         super().setUpClass()
+
+        cls.server_process = subprocess.Popen(
+            ["python", "manage.py", "runserver"],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE
+        )
+
+    # Allow the server some time to start
+        time.sleep(3)
         options = webdriver.ChromeOptions()
         options.add_argument("--start-fullscreen")
         
@@ -30,6 +41,10 @@ class SeleniumTestCase(StaticLiveServerTestCase):
         Quit the webdriver
         """
         cls.driver.quit()
+
+        cls.server_process.terminate()
+        cls.server_process.wait()
+        
         super().tearDownClass()
 
     def tearDown(self):

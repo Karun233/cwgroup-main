@@ -17,7 +17,7 @@ class E2ETests(SeleniumTestCase):
         element.clear()
         element.send_keys(value)
     
-    """def test_signup(self):
+    def test_signup(self):
         
         self.driver.get(f'http://127.0.0.1:8000/register/')
         
@@ -37,9 +37,9 @@ class E2ETests(SeleniumTestCase):
         WebDriverWait(self.driver, 10).until(
             EC.url_contains("/login/")  # Example URL after signup
         )
-        self.assertIn("/login/", self.driver.current_url)"""
+        self.assertIn("/login/", self.driver.current_url)
     
-    """def test_login(self):
+    def test_login(self):
         
         # Create a test user programmatically
         
@@ -60,9 +60,9 @@ class E2ETests(SeleniumTestCase):
         WebDriverWait(self.driver, 10).until(
             EC.url_contains("/dashboard/")
         )
-        self.assertIn("/dashboard/", self.driver.current_url)"""
+        self.assertIn("/dashboard/", self.driver.current_url)
     
-    """def test_edit_profile(self):
+    def test_edit_profile(self):
         
         from django.contrib.auth import get_user_model
         User = get_user_model()
@@ -97,6 +97,8 @@ class E2ETests(SeleniumTestCase):
         # Fill in profile fields with new data
         self.fill_input(By.ID, "name", "Selenium Test User")
         self.fill_input(By.ID, "email", "changedemail@example.com")
+        self.fill_input(By.ID, "date_of_birth", "01/01/2000")
+        
         # ... fill other fields as needed
         
         save_button = self.driver.find_element(By.CSS_SELECTOR, "button[type='submit']")
@@ -108,12 +110,10 @@ class E2ETests(SeleniumTestCase):
         # Switch to the alert, check its text, and accept it
         alert = self.driver.switch_to.alert
         self.assertIn("Profile updated successfully", alert.text)
-        alert.accept()"""
+        alert.accept()
 
 
-    def test_add_hobby(self):
-        
-
+    def test_add_hobby(self): 
         # --- Begin Login Process ---
         self.driver.get(f'http://127.0.0.1:8000/login/')
         
@@ -147,7 +147,7 @@ class E2ETests(SeleniumTestCase):
         other_option = self.driver.find_element(By.CSS_SELECTOR, "#allHobbies option[value='other']")
         other_option.click()
         
-        self.fill_input(By.CSS_SELECTOR, "input[placeholder='Enter your new hobby']", "New_hobby_test")
+        self.fill_input(By.CSS_SELECTOR, "input[placeholder='Enter your new hobby']", "New_hobby_test3")
 
         # Optional: Wait briefly to ensure the UI processes the input
         time.sleep(1)
@@ -182,11 +182,81 @@ class E2ETests(SeleniumTestCase):
         except TimeoutException:
             self.fail("Success message did not appear after adding a hobby.")
 
+    
+    def test_edit_password(self): 
+        # --- Begin Login Process ---
+        self.driver.get(f'http://127.0.0.1:8000/login/')
+        
+        self.fill_input(By.ID, "id_username", "latha")
+        self.fill_input(By.ID, "id_password", "hello2003")
+        
+        login_button = self.driver.find_element(By.CSS_SELECTOR, "input[type='submit']")
+        login_button.click()
+        
+        # Wait for redirection after login
+        WebDriverWait(self.driver, 10).until(
+            EC.url_contains("/dashboard")
+        )
+        profile_link = WebDriverWait(self.driver, 10).until(
+            EC.element_to_be_clickable((By.CSS_SELECTOR, "a.nav-link[href='/profile']"))
+        )
+        profile_link.click()
+
+        # Wait for profile page to load
+        WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((By.ID, "allHobbies"))
+        )
+
+        # Click the button to navigate to the change password section
+        change_password_button = WebDriverWait(self.driver, 10).until(
+            EC.element_to_be_clickable((By.CSS_SELECTOR, "button.btn.btn-outline-danger.fw-bold"))
+        )
+        change_password_button.click()
+
+        # Scroll down to the change password box
+        password_container = self.driver.find_element(By.CSS_SELECTOR, "div.container.mt-5")
+        self.driver.execute_script("arguments[0].scrollIntoView(true);", password_container)
+
+        # Fill in the current password and new password
+        current_password = "hello2003"
+        new_password = "hello2003"
+
+        self.fill_input(By.ID, "current_password", current_password)
+        self.fill_input(By.ID, "new_password", new_password)
+        self.fill_input(By.ID, "confirm_password", new_password)
+
+        #update_container = self.driver.find_element(By.CSS_SELECTOR, "div.text-center")
+        #self.driver.execute_script("arguments[0].scrollIntoView(true);", update_container)
+
+        # Click the change password button
+        change_password_submit = WebDriverWait(self.driver, 10).until(
+            EC.element_to_be_clickable((By.XPATH, "//button[contains(text(), 'Update Password')]"))
+        )
+
+        update_container = self.driver.find_element(By.CSS_SELECTOR, "div.text-center")
+        self.driver.execute_script("arguments[0].scrollIntoView(true);", update_container)
+
+        time.sleep(2)
+        
+        change_password_submit.click()
+
+        #Wait for the alert
+        alert = WebDriverWait(self.driver, 10).until(EC.alert_is_present())
+        alert_text = alert.text.strip()
+
+        # Verify the alert text
+        expected_text = "Password changed successfully!"
+        print(f"Alert Text: '{alert_text}'")  # Debugging
+        self.assertIn(expected_text, alert_text)
+
+        # Accept the alert
+        alert.accept()
+
         
 
 
 
-    """def test_filter_users_by_age(self): 
+    def test_filter_users_by_age(self): 
 
         User = get_user_model()
         if not User.objects.filter(username="jeff").exists():
@@ -239,10 +309,10 @@ class E2ETests(SeleniumTestCase):
                 
                 self.assertTrue(20 <= age <= 30, f"User age {age} not in range")
             except Exception as e:
-                self.fail(f"Error processing user age: {e}")"""
+                self.fail(f"Error processing user age: {e}")
 
     
-    """def test_send_friend_request(self):
+    def test_send_friend_request(self):
         # --- Begin Login Process ---
         self.driver.get(f'http://127.0.0.1:8000/login/')
         
@@ -295,9 +365,9 @@ class E2ETests(SeleniumTestCase):
         WebDriverWait(self.driver, 10).until(EC.alert_is_present())
         alert = self.driver.switch_to.alert
         self.assertIn("Friend request sent!", alert.text)
-        alert.accept()"""
+        alert.accept()
         
-    """def test_accept_friend_request(self):
+    def test_accept_friend_request(self):
         # Begin Login Process as john23
         self.driver.get(f'http://127.0.0.1:8000/login/')
         self.fill_input(By.ID, "id_username", "john23")
@@ -335,4 +405,4 @@ class E2ETests(SeleniumTestCase):
         WebDriverWait(self.driver, 10).until(EC.alert_is_present())
         alert = self.driver.switch_to.alert
         self.assertIn("Friend request accepted!", alert.text)
-        alert.accept()"""
+        alert.accept()
